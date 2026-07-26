@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sidecar — mock orchestrator</title>
+    <style>
+      :root { --ink:#1c2430; --muted:#6b7683; --line:#e3e7ec; --brand:#1f6feb;
+              --up:#1a7f37; --down:#c9372c; --warn:#b7791f; --wash:#f6f7f9; }
+      * { box-sizing: border-box; }
+      body { margin:0; background:var(--wash); color:var(--ink); font:14px/1.5 -apple-system,
+             BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; }
+      main { max-width:1080px; margin:0 auto; padding:24px 16px 48px; }
+      .card { background:#fff; border:1px solid var(--line); border-radius:12px; padding:16px 18px;
+              margin-bottom:18px; }
+      .bar { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+      .pill { font-size:12px; font-weight:700; padding:5px 10px; border-radius:999px; color:#fff;
+              background:var(--muted); }
+      .up { background:var(--up); } .down { background:var(--down); }
+      .who { font-weight:600; } .sub { color:var(--muted); font-size:13px; }
+      .spacer { margin-left:auto; }
+      h2 { font-size:13px; text-transform:uppercase; letter-spacing:.04em; color:var(--muted);
+           margin:0 0 12px; }
+      label { display:block; font-size:12px; font-weight:600; color:var(--muted);
+              margin:12px 0 4px; }
+      label.inline { display:inline-flex; align-items:center; gap:6px; font-weight:500;
+                     margin:0; text-transform:none; }
+      select, input[type=text], textarea { width:100%; padding:8px 10px; border:1px solid var(--line);
+              border-radius:8px; background:#fff; color:var(--ink); font:inherit; }
+      textarea { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:12px;
+                 min-height:190px; resize:vertical; }
+      button { padding:8px 14px; border:1px solid var(--line); border-radius:8px; background:#fff;
+               color:var(--ink); font:inherit; font-weight:600; cursor:pointer; }
+      button.primary { background:var(--brand); border-color:var(--brand); color:#fff; }
+      button:disabled { opacity:.5; cursor:default; }
+      .row { display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-top:14px; }
+      table { width:100%; border-collapse:collapse; background:#fff; border:1px solid var(--line);
+              border-radius:12px; overflow:hidden; }
+      th,td { text-align:left; padding:10px 12px; border-bottom:1px solid var(--line);
+              vertical-align:top; }
+      th { font-size:12px; text-transform:uppercase; letter-spacing:.03em; color:var(--muted); }
+      .mono { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:12px; }
+      .st { font-size:11px; font-weight:700; padding:3px 8px; border-radius:999px;
+            background:#eef1f4; color:var(--muted); white-space:nowrap; }
+      .st-ACCEPTED { background:#e6f4ea; color:var(--up); }
+      .st-REJECTED { background:#fdecea; color:var(--down); }
+      .st-REFERRED { background:#fdf4e3; color:var(--warn); }
+      .st-waiting  { background:#e7f0fe; color:var(--brand); }
+      .st-ok { background:#e6f4ea; color:var(--up); }
+      .st-bad { background:#fdf4e3; color:var(--warn); }
+      .st-dead { background:#fdecea; color:var(--down); }
+      .empty { padding:28px; text-align:center; color:var(--muted); }
+      .note { color:var(--muted); font-size:12px; margin-top:14px; }
+      .trait { color:var(--muted); font-size:13px; margin-top:8px; min-height:20px; }
+      code { background:var(--wash); padding:1px 5px; border-radius:4px; font-size:12px; }
+      .scroll { overflow-x:auto; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="card bar">
+        <span id="pill" class="pill">…</span>
+        <div>
+          <div class="who">Sidecar — mock orchestrator</div>
+          <div class="sub" id="sub">…</div>
+        </div>
+        <span class="spacer sub" id="count"></span>
+      </div>
+
+      <div class="card">
+        <h2>1 · Where your module is</h2>
+        <label for="moduleUrl">Module base URL — dispatches go to this + <span id="modulePath" class="mono">/api/v1/applications</span></label>
+        <input type="text" id="moduleUrl" spellcheck="false" />
+        <p class="note">
+          Overrides the configured <code>MODULE_URL</code> for the sends you make from this page —
+          no restart. Use <code>http://host.docker.internal:8080</code> when your backend is
+          running in your IDE rather than in compose.
+        </p>
+      </div>
+
+      <div class="card">
+        <h2>2 · Pick an application and send it</h2>
+        <label for="scenario">Scenario — every one is SIM-01 with a single field changed</label>
+        <select id="scenario"></select>
+        <div class="trait" id="trait"></div>
+
+        <label for="envelope">Envelope — exactly what gets POSTed. Edit it if you want.</label>
+        <textarea id="envelope" spellcheck="false"></textarea>
+
+        <div class="row">
+          <button class="primary" id="send">Send</button>
+          <button id="sendAll">Send all</button>
+          <button id="reset">Reset to file</button>
+          <label class="inline"><input type="checkbox" id="freshId" /> unique id per send</label>
+          <span class="spacer sub" id="sendMsg"></span>
+        </div>
+        <p class="note">
+          <strong>Unique id</strong> rewrites the application id so you can send the same scenario
+          twice against a module that is correctly idempotent. Leave it off to test that
+          idempotency on purpose.
+        </p>
+      </div>
+
+      <div class="card">
+        <div class="bar">
+          <h2 style="margin:0">3 · The exchange log</h2>
+          <button class="spacer" id="clear">Clear log</button>
+        </div>
+        <p class="note" style="margin-top:12px">
+          Both halves of the contract. <strong>Ack</strong> is what your module answered
+          immediately; <strong>Callback</strong> is the decision it POSTed back afterwards — the
+          half you cannot see with curl.
+        </p>
+      </div>
+
+      <div class="scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>Application</th><th>Scenario</th><th>Sent</th>
+              <th>Ack</th><th>Callback</th><th>Comment</th>
+            </tr>
+          </thead>
+          <tbody id="rows">
+            <tr><td colspan="6" class="empty">Loading…</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="note">
+        This box is a development aid, not part of the contract — your module never calls it back
+        by name, it just POSTs <code>/api/v1/callbacks</code> at whatever
+        <code>ORCHESTRATOR_URL</code> says. Point that at the real orchestrator and nothing in your
+        module changes.
+      </p>
+    </main>
+    <script src="app.js"></script>
+  </body>
+</html>

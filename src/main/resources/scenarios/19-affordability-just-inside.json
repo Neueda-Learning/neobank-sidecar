@@ -1,0 +1,60 @@
+{
+  "applicationId": "SIM-19",
+  "correlationId": "sim-0019-4c1a-8f2b-1d5e9a000019",
+  "command": "process-application",
+  "application": {
+    "applicationId": "SIM-19",
+    "channel": "MOBILE_APP",
+    "submittedAt": "2026-07-25T09:14:00Z",
+    "applicant": {
+      "fullName": "Daniel Fischer",
+      "dateOfBirth": "1989-03-23",
+      "email": "daniel.fischer@example.com",
+      "mobile": "+447700900215",
+      "nationality": "DE",
+      "countryOfResidence": "GB",
+      "taxResidencies": [
+        "GB"
+      ],
+      "residentialStatus": "RENTING",
+      "currentAddress": {
+        "line1": "21 Norfolk Row",
+        "line2": null,
+        "city": "Sheffield",
+        "postcode": "S1 4RG",
+        "country": "GB"
+      },
+      "monthsAtAddress": 39,
+      "dependants": 0
+    },
+    "identityDocument": {
+      "type": "PASSPORT",
+      "documentId": "DE2290471",
+      "issuingCountry": "DE",
+      "expiryDate": "2031-01-16"
+    },
+    "employment": {
+      "status": "PERMANENT",
+      "employerName": "Steel City Media",
+      "monthsInEmployment": 65
+    },
+    "finances": {
+      "annualIncome": 30000,
+      "monthlyHousingCost": 1000,
+      "existingCreditCommitments": 100
+    },
+    "product": {
+      "productCode": "CREDIT_CARD_STANDARD",
+      "requestedCreditLimit": 3000
+    },
+    "delivery": {
+      "useCurrentAddress": true,
+      "address": null
+    },
+    "consents": {
+      "termsAccepted": true,
+      "paperlessStatements": true,
+      "marketingConsent": false
+    }
+  }
+}

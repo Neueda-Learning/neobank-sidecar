@@ -1,0 +1,60 @@
+{
+  "applicationId": "SIM-12",
+  "correlationId": "sim-0012-4c1a-8f2b-1d5e9a000012",
+  "command": "process-application",
+  "application": {
+    "applicationId": "SIM-12",
+    "channel": "BRANCH",
+    "submittedAt": "2026-07-25T14:02:00Z",
+    "applicant": {
+      "fullName": "Maria Nowak",
+      "dateOfBirth": "1996-04-11",
+      "email": "maria.nowak@example.com",
+      "mobile": "+447700900123",
+      "nationality": "PL",
+      "countryOfResidence": "GB",
+      "taxResidencies": [
+        "GB"
+      ],
+      "residentialStatus": "RENTING",
+      "currentAddress": {
+        "line1": "42 Hanbury Street",
+        "line2": null,
+        "city": "London",
+        "postcode": "E1 5JP",
+        "country": "GB"
+      },
+      "monthsAtAddress": 14,
+      "dependants": 0
+    },
+    "identityDocument": {
+      "type": "PASSPORT",
+      "documentId": "ZS1234567",
+      "issuingCountry": "PL",
+      "expiryDate": "2031-02-28"
+    },
+    "employment": {
+      "status": "PERMANENT",
+      "employerName": "Trellis Health Ltd",
+      "monthsInEmployment": 11
+    },
+    "finances": {
+      "annualIncome": 34000,
+      "monthlyHousingCost": 1000,
+      "existingCreditCommitments": 180
+    },
+    "product": {
+      "productCode": "CREDIT_CARD_STANDARD",
+      "requestedCreditLimit": 1500
+    },
+    "delivery": {
+      "useCurrentAddress": true,
+      "address": null
+    },
+    "consents": {
+      "termsAccepted": true,
+      "paperlessStatements": true,
+      "marketingConsent": false
+    }
+  }
+}

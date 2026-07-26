@@ -1,0 +1,60 @@
+{
+  "applicationId": "SIM-03",
+  "correlationId": "sim-0003-4c1a-8f2b-1d5e9a000003",
+  "command": "process-application",
+  "application": {
+    "applicationId": "SIM-03",
+    "channel": "MOBILE_APP",
+    "submittedAt": "{{today}}T09:14:00Z",
+    "applicant": {
+      "fullName": "Amara Osei",
+      "dateOfBirth": "{{today-18y}}",
+      "email": "amara.osei@example.com",
+      "mobile": "+447700900201",
+      "nationality": "GB",
+      "countryOfResidence": "GB",
+      "taxResidencies": [
+        "GB"
+      ],
+      "residentialStatus": "LIVING_WITH_FAMILY",
+      "currentAddress": {
+        "line1": "17 Blenheim Terrace",
+        "line2": null,
+        "city": "Leeds",
+        "postcode": "LS2 9JT",
+        "country": "GB"
+      },
+      "monthsAtAddress": 120,
+      "dependants": 0
+    },
+    "identityDocument": {
+      "type": "PASSPORT",
+      "documentId": "GB9004411",
+      "issuingCountry": "GB",
+      "expiryDate": "2033-05-19"
+    },
+    "employment": {
+      "status": "STUDENT",
+      "employerName": "University of Leeds",
+      "monthsInEmployment": 0
+    },
+    "finances": {
+      "annualIncome": 9000,
+      "monthlyHousingCost": 200,
+      "existingCreditCommitments": 0
+    },
+    "product": {
+      "productCode": "CREDIT_CARD_STUDENT",
+      "requestedCreditLimit": 750
+    },
+    "delivery": {
+      "useCurrentAddress": true,
+      "address": null
+    },
+    "consents": {
+      "termsAccepted": true,
+      "paperlessStatements": true,
+      "marketingConsent": false
+    }
+  }
+}

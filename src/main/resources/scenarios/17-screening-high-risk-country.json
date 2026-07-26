@@ -1,0 +1,60 @@
+{
+  "applicationId": "SIM-17",
+  "correlationId": "sim-0017-4c1a-8f2b-1d5e9a000017",
+  "command": "process-application",
+  "application": {
+    "applicationId": "SIM-17",
+    "channel": "MOBILE_APP",
+    "submittedAt": "2026-07-25T09:14:00Z",
+    "applicant": {
+      "fullName": "Reza Karimi",
+      "dateOfBirth": "1984-07-30",
+      "email": "reza.karimi@example.com",
+      "mobile": "+447700900213",
+      "nationality": "IR",
+      "countryOfResidence": "GB",
+      "taxResidencies": [
+        "GB"
+      ],
+      "residentialStatus": "RENTING",
+      "currentAddress": {
+        "line1": "10 Belvoir Street",
+        "line2": null,
+        "city": "Leicester",
+        "postcode": "LE1 6TE",
+        "country": "GB"
+      },
+      "monthsAtAddress": 15,
+      "dependants": 0
+    },
+    "identityDocument": {
+      "type": "PASSPORT",
+      "documentId": "IR7761209",
+      "issuingCountry": "IR",
+      "expiryDate": "2030-02-11"
+    },
+    "employment": {
+      "status": "PERMANENT",
+      "employerName": "Midlands Freight",
+      "monthsInEmployment": 29
+    },
+    "finances": {
+      "annualIncome": 34000,
+      "monthlyHousingCost": 1000,
+      "existingCreditCommitments": 180
+    },
+    "product": {
+      "productCode": "CREDIT_CARD_REWARDS",
+      "requestedCreditLimit": 3000
+    },
+    "delivery": {
+      "useCurrentAddress": true,
+      "address": null
+    },
+    "consents": {
+      "termsAccepted": true,
+      "paperlessStatements": true,
+      "marketingConsent": false
+    }
+  }
+}

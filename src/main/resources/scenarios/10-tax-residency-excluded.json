@@ -1,0 +1,61 @@
+{
+  "applicationId": "SIM-10",
+  "correlationId": "sim-0010-4c1a-8f2b-1d5e9a000010",
+  "command": "process-application",
+  "application": {
+    "applicationId": "SIM-10",
+    "channel": "MOBILE_APP",
+    "submittedAt": "2026-07-25T09:14:00Z",
+    "applicant": {
+      "fullName": "Grace Miller",
+      "dateOfBirth": "1983-04-29",
+      "email": "grace.miller@example.com",
+      "mobile": "+447700900207",
+      "nationality": "US",
+      "countryOfResidence": "GB",
+      "taxResidencies": [
+        "GB",
+        "US"
+      ],
+      "residentialStatus": "RENTING",
+      "currentAddress": {
+        "line1": "31 Marsham Street",
+        "line2": null,
+        "city": "London",
+        "postcode": "SW1P 3BT",
+        "country": "GB"
+      },
+      "monthsAtAddress": 26,
+      "dependants": 0
+    },
+    "identityDocument": {
+      "type": "PASSPORT",
+      "documentId": "US7719023",
+      "issuingCountry": "US",
+      "expiryDate": "2032-01-22"
+    },
+    "employment": {
+      "status": "PERMANENT",
+      "employerName": "Atlantic Reinsurance",
+      "monthsInEmployment": 44
+    },
+    "finances": {
+      "annualIncome": 52000,
+      "monthlyHousingCost": 1400,
+      "existingCreditCommitments": 200
+    },
+    "product": {
+      "productCode": "CREDIT_CARD_REWARDS",
+      "requestedCreditLimit": 3000
+    },
+    "delivery": {
+      "useCurrentAddress": true,
+      "address": null
+    },
+    "consents": {
+      "termsAccepted": true,
+      "paperlessStatements": true,
+      "marketingConsent": false
+    }
+  }
+}

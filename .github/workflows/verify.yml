@@ -1,0 +1,53 @@
+name: Verify
+
+# This repo publishes nothing. Every module repo builds it straight from git as a Docker
+# build context (`build: https://github.com/<owner>/neobank-sidecar.git#v1`), so there is no
+# image to push and no registry to keep public.
+#
+# What that makes this workflow responsible for: main must always be buildable, because a
+# broken commit here is a broken `docker compose up` for every team that rebuilds. The `v1`
+# tag is the gate — move it only once main is green.
+on:
+  push:
+    branches: ["**"]
+    paths-ignore: ["**.md"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: build · tests · Docker image
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: "21", cache: maven }
+
+      # CI=true activates the `integration` profile, so the real-MySQL *IT runs here. It is
+      # worth gating on: the single `exchange` table is half-empty by design, and H2 cannot
+      # see the type mismatches MySQL raises under ddl-auto=validate.
+      - name: Tests (26 unit + slice, 4 real-MySQL IT)
+        run: ./mvnw -B verify
+
+      # Teams do not run `mvn`; they run `docker compose up --build`. So the thing that must
+      # be green is the IMAGE build, from this directory as its own context — exactly what a
+      # git build context does on their machine.
+      - name: Image builds from this directory as a context
+        run: docker build -t neobank-sidecar:ci .
+
+      # The corpus is loaded by name from the classpath, and a fat jar resolves classpath
+      # resources differently from an IDE. If the scenarios ever stop being packaged, every
+      # team gets an empty library and no error — so count them inside the actual jar.
+      # Extracted to the runner because a JRE image has neither `unzip` nor `jar`.
+      - name: The scenario corpus is inside the built jar
+        run: |
+          id=$(docker create neobank-sidecar:ci)
+          docker cp "$id:/app/app.jar" /tmp/app.jar
+          docker rm "$id" >/dev/null
+          n=$(unzip -l /tmp/app.jar | grep -c 'BOOT-INF/classes/scenarios/.*\.json')
+          echo "scenario files packaged: $n"
+          test "$n" -ge 27   # 26 envelopes + index.json

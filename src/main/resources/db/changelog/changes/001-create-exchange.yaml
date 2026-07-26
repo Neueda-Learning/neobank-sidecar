@@ -1,0 +1,82 @@
+# ONE table: both halves of one contract exchange in one row.
+#
+# A dispatch fills the left half (module_url, sent_at, ack_*); the module's callback fills the
+# right half (callback_*). Two tables would have been tidier on paper and worse in practice —
+# the whole question this box answers is "did my decision come back", and that is one row.
+#
+# Almost everything is nullable on purpose:
+#   * a dispatch that is refused has no callback (yet, or ever);
+#   * an unsolicited callback has no dispatch, so no module_url and no sent_at;
+#   * scenario 26 is a deliberately invalid envelope with NO applicationId, and it must still
+#     be recorded — a dispatch you cannot see is worse than one that failed.
+databaseChangeLog:
+  - changeSet:
+      id: 001-create-exchange
+      author: sidecar
+      changes:
+        - createTable:
+            tableName: exchange
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: application_id
+                  type: VARCHAR(64)
+              - column:
+                  name: correlation_id
+                  type: VARCHAR(64)
+              - column:
+                  name: scenario_id
+                  type: VARCHAR(32)
+              - column:
+                  name: module_url
+                  type: VARCHAR(255)
+              - column:
+                  name: sent_at
+                  type: TIMESTAMP
+              # VARCHAR(8000), not TEXT: H2 and MySQL disagree on how TEXT maps, and
+              # ddl-auto=validate then fails on one of them. The module template hit this
+              # same wall — see attempt-b00 domain/Application.java.
+              - column:
+                  name: ack_body
+                  type: VARCHAR(8000)
+              - column:
+                  name: ack_http_status
+                  type: INT
+              - column:
+                  name: callback_service_id
+                  type: VARCHAR(64)
+              - column:
+                  name: callback_status
+                  type: VARCHAR(32)
+              - column:
+                  name: callback_comment
+                  type: VARCHAR(500)
+              - column:
+                  name: callback_at
+                  type: TIMESTAMP
+        # No `unsolicited` column. It would be derived data — a row with no sent_at is one
+        # nobody dispatched — and a stored flag can disagree with the row it describes.
+        # It also dodges a portability trap: Liquibase BOOLEAN becomes TINYINT on MySQL while
+        # Hibernate expects BIT, so ddl-auto=validate rejects it (caught by ExchangeRepositoryIT,
+        # which is the whole reason that test runs against real MySQL rather than H2).
+        - createIndex:
+            tableName: exchange
+            indexName: idx_exchange_application
+            columns:
+              - column:
+                  name: application_id
+        - createIndex:
+            tableName: exchange
+            indexName: idx_exchange_correlation
+            columns:
+              - column:
+                  name: correlation_id
+      rollback:
+        - dropTable:
+            tableName: exchange

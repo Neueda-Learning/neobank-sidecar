@@ -1,0 +1,60 @@
+{
+  "applicationId": "SIM-24",
+  "correlationId": "sim-0024-4c1a-8f2b-1d5e9a000024",
+  "command": "process-application",
+  "application": {
+    "applicationId": "SIM-24",
+    "channel": "MOBILE_APP",
+    "submittedAt": "2026-07-25T09:14:00Z",
+    "applicant": {
+      "fullName": "Peter Novak",
+      "dateOfBirth": "1985-01-19",
+      "email": "peter.novak@example.com",
+      "mobile": "+447700900220",
+      "nationality": "SK",
+      "countryOfResidence": "GB",
+      "taxResidencies": [
+        "GB"
+      ],
+      "residentialStatus": "RENTING",
+      "currentAddress": {
+        "line1": "5 Churchill Way",
+        "line2": null,
+        "city": "Cardiff",
+        "postcode": "CF10 2EH",
+        "country": "GB"
+      },
+      "monthsAtAddress": 88,
+      "dependants": 0
+    },
+    "identityDocument": {
+      "type": "PASSPORT",
+      "documentId": "SK6612903",
+      "issuingCountry": "SK",
+      "expiryDate": "2029-07-21"
+    },
+    "employment": {
+      "status": "PERMANENT",
+      "employerName": "Severn Utilities",
+      "monthsInEmployment": 110
+    },
+    "finances": {
+      "annualIncome": 45000,
+      "monthlyHousingCost": 1100,
+      "existingCreditCommitments": 250
+    },
+    "product": {
+      "productCode": "CREDIT_CARD_PREMIUM",
+      "requestedCreditLimit": 7500
+    },
+    "delivery": {
+      "useCurrentAddress": true,
+      "address": null
+    },
+    "consents": {
+      "termsAccepted": true,
+      "paperlessStatements": true,
+      "marketingConsent": false
+    }
+  }
+}

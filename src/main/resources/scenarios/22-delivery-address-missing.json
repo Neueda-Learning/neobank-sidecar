@@ -1,0 +1,60 @@
+{
+  "applicationId": "SIM-22",
+  "correlationId": "sim-0022-4c1a-8f2b-1d5e9a000022",
+  "command": "process-application",
+  "application": {
+    "applicationId": "SIM-22",
+    "channel": "MOBILE_APP",
+    "submittedAt": "2026-07-25T09:14:00Z",
+    "applicant": {
+      "fullName": "Ruth Kelly",
+      "dateOfBirth": "1993-09-06",
+      "email": "ruth.kelly@example.com",
+      "mobile": "+447700900218",
+      "nationality": "IE",
+      "countryOfResidence": "GB",
+      "taxResidencies": [
+        "GB"
+      ],
+      "residentialStatus": "RENTING",
+      "currentAddress": {
+        "line1": "12 Donegall Square",
+        "line2": null,
+        "city": "Belfast",
+        "postcode": "BT1 5GS",
+        "country": "GB"
+      },
+      "monthsAtAddress": 51,
+      "dependants": 0
+    },
+    "identityDocument": {
+      "type": "PASSPORT",
+      "documentId": "IE9930277",
+      "issuingCountry": "IE",
+      "expiryDate": "2031-04-12"
+    },
+    "employment": {
+      "status": "PERMANENT",
+      "employerName": "Lagan Health",
+      "monthsInEmployment": 77
+    },
+    "finances": {
+      "annualIncome": 34000,
+      "monthlyHousingCost": 1000,
+      "existingCreditCommitments": 180
+    },
+    "product": {
+      "productCode": "CREDIT_CARD_REWARDS",
+      "requestedCreditLimit": 3000
+    },
+    "delivery": {
+      "useCurrentAddress": false,
+      "address": null
+    },
+    "consents": {
+      "termsAccepted": true,
+      "paperlessStatements": true,
+      "marketingConsent": false
+    }
+  }
+}

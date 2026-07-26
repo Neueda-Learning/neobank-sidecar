@@ -1,0 +1,18 @@
+spring:
+  # Tests run against in-memory H2 in MySQL-compatibility mode — no Docker needed.
+  datasource:
+    url: jdbc:h2:mem:sidecartest;MODE=MySQL;DB_CLOSE_DELAY=-1
+    username: sa
+    password: ""
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+
+# Point dispatches at a dead port so no test can escape the JVM and hit a real module.
+sidecar:
+  module-url: http://localhost:9
+  module-path: /api/v1/applications
+  scenarios-dir: ""

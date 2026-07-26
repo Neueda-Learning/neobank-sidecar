@@ -1,0 +1,60 @@
+{
+  "applicationId": "SIM-14",
+  "correlationId": "sim-0014-4c1a-8f2b-1d5e9a000014",
+  "command": "process-application",
+  "application": {
+    "applicationId": "SIM-14",
+    "channel": "MOBILE_APP",
+    "submittedAt": "2026-07-25T09:14:00Z",
+    "applicant": {
+      "fullName": "Yusuf Demir",
+      "dateOfBirth": "1992-05-23",
+      "email": "yusuf.demir@example.com",
+      "mobile": "+447700900210",
+      "nationality": "TR",
+      "countryOfResidence": "GB",
+      "taxResidencies": [
+        "GB"
+      ],
+      "residentialStatus": "RENTING",
+      "currentAddress": {
+        "line1": "44 Broad Street",
+        "line2": null,
+        "city": "Birmingham",
+        "postcode": "B1 1TF",
+        "country": "GB"
+      },
+      "monthsAtAddress": 34,
+      "dependants": 0
+    },
+    "identityDocument": {
+      "type": "PASSPORT",
+      "documentId": "ZZ0000000",
+      "issuingCountry": "TR",
+      "expiryDate": "2031-09-15"
+    },
+    "employment": {
+      "status": "PERMANENT",
+      "employerName": "Midlands Freight",
+      "monthsInEmployment": 41
+    },
+    "finances": {
+      "annualIncome": 34000,
+      "monthlyHousingCost": 1000,
+      "existingCreditCommitments": 180
+    },
+    "product": {
+      "productCode": "CREDIT_CARD_REWARDS",
+      "requestedCreditLimit": 3000
+    },
+    "delivery": {
+      "useCurrentAddress": true,
+      "address": null
+    },
+    "consents": {
+      "termsAccepted": true,
+      "paperlessStatements": true,
+      "marketingConsent": false
+    }
+  }
+}

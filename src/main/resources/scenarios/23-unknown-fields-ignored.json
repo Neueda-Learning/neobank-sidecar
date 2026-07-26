@@ -1,0 +1,64 @@
+{
+  "applicationId": "SIM-23",
+  "correlationId": "sim-0023-4c1a-8f2b-1d5e9a000023",
+  "command": "process-application",
+  "application": {
+    "applicationId": "SIM-23",
+    "channel": "MOBILE_APP",
+    "submittedAt": "2026-07-25T09:14:00Z",
+    "applicant": {
+      "fullName": "Ana Ruiz",
+      "dateOfBirth": "1993-06-27",
+      "email": "ana.ruiz@example.com",
+      "mobile": "+447700900219",
+      "nationality": "ES",
+      "countryOfResidence": "GB",
+      "taxResidencies": [
+        "GB"
+      ],
+      "residentialStatus": "RENTING",
+      "currentAddress": {
+        "line1": "2 Anchor Road",
+        "line2": null,
+        "city": "Bristol",
+        "postcode": "BS1 6QF",
+        "country": "GB"
+      },
+      "monthsAtAddress": 44,
+      "dependants": 0,
+      "middleName": "Isabel"
+    },
+    "identityDocument": {
+      "type": "PASSPORT",
+      "documentId": "ES2214760",
+      "issuingCountry": "ES",
+      "expiryDate": "2030-12-19"
+    },
+    "employment": {
+      "status": "PERMANENT",
+      "employerName": "Harbour Analytics",
+      "monthsInEmployment": 63
+    },
+    "finances": {
+      "annualIncome": 34000,
+      "monthlyHousingCost": 1000,
+      "existingCreditCommitments": 180
+    },
+    "product": {
+      "productCode": "CREDIT_CARD_REWARDS",
+      "requestedCreditLimit": 3000,
+      "promoRate": 19.9
+    },
+    "delivery": {
+      "useCurrentAddress": true,
+      "address": null
+    },
+    "consents": {
+      "termsAccepted": true,
+      "paperlessStatements": true,
+      "marketingConsent": false
+    },
+    "campaignCode": "SUMMER26",
+    "referrer": "aggregator-partner-7"
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "applicationId": "SIM-13",
+  "correlationId": "sim-0013-4c1a-8f2b-1d5e9a000013",
+  "command": "process-application",
+  "application": {
+    "applicationId": "SIM-13",
+    "channel": "MOBILE_APP",
+    "submittedAt": "2026-07-25T09:14:00Z",
+    "applicant": {
+      "fullName": "Henrik Larsen",
+      "dateOfBirth": "1987-02-08",
+      "email": "henrik.larsen@example.com",
+      "mobile": "+447700900209",
+      "nationality": "DK",
+      "countryOfResidence": "GB",
+      "taxResidencies": [
+        "GB"
+      ],
+      "residentialStatus": "RENTING",
+      "currentAddress": {
+        "line1": "6 Grey Street",
+        "line2": null,
+        "city": "Newcastle",
+        "postcode": "NE1 4ST",
+        "country": "GB"
+      },
+      "monthsAtAddress": 55,
+      "dependants": 0
+    },
+    "identityDocument": {
+      "type": "PASSPORT",
+      "documentId": "DK1180552",
+      "issuingCountry": "DK",
+      "expiryDate": "2025-11-30"
+    },
+    "employment": {
+      "status": "PERMANENT",
+      "employerName": "Tyne Renewables",
+      "monthsInEmployment": 70
+    },
+    "finances": {
+      "annualIncome": 34000,
+      "monthlyHousingCost": 1000,
+      "existingCreditCommitments": 180
+    },
+    "product": {
+      "productCode": "CREDIT_CARD_REWARDS",
+      "requestedCreditLimit": 3000
+    },
+    "delivery": {
+      "useCurrentAddress": true,
+      "address": null
+    },
+    "consents": {
+      "termsAccepted": true,
+      "paperlessStatements": true,
+      "marketingConsent": false
+    }
+  }
+}

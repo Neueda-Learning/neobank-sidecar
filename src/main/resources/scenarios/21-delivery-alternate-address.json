@@ -1,0 +1,66 @@
+{
+  "applicationId": "SIM-21",
+  "correlationId": "sim-0021-4c1a-8f2b-1d5e9a000021",
+  "command": "process-application",
+  "application": {
+    "applicationId": "SIM-21",
+    "channel": "MOBILE_APP",
+    "submittedAt": "2026-07-25T09:14:00Z",
+    "applicant": {
+      "fullName": "Oscar Lindqvist",
+      "dateOfBirth": "1985-12-02",
+      "email": "oscar.lindqvist@example.com",
+      "mobile": "+447700900217",
+      "nationality": "SE",
+      "countryOfResidence": "GB",
+      "taxResidencies": [
+        "GB"
+      ],
+      "residentialStatus": "RENTING",
+      "currentAddress": {
+        "line1": "88 Curtain Road",
+        "line2": null,
+        "city": "London",
+        "postcode": "EC2A 4NE",
+        "country": "GB"
+      },
+      "monthsAtAddress": 4,
+      "dependants": 0
+    },
+    "identityDocument": {
+      "type": "PASSPORT",
+      "documentId": "SE7719044",
+      "issuingCountry": "SE",
+      "expiryDate": "2032-05-25"
+    },
+    "employment": {
+      "status": "PERMANENT",
+      "employerName": "Baltic Trade Partners",
+      "monthsInEmployment": 33
+    },
+    "finances": {
+      "annualIncome": 47000,
+      "monthlyHousingCost": 1500,
+      "existingCreditCommitments": 0
+    },
+    "product": {
+      "productCode": "CREDIT_CARD_REWARDS",
+      "requestedCreditLimit": 3000
+    },
+    "delivery": {
+      "useCurrentAddress": false,
+      "address": {
+        "line1": "Baltic Trade Partners",
+        "line2": "4th Floor, 120 Moorgate",
+        "city": "London",
+        "postcode": "EC2M 6UR",
+        "country": "GB"
+      }
+    },
+    "consents": {
+      "termsAccepted": true,
+      "paperlessStatements": true,
+      "marketingConsent": false
+    }
+  }
+}

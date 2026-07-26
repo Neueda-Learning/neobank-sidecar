@@ -1,0 +1,60 @@
+{
+  "applicationId": "SIM-18",
+  "correlationId": "sim-0018-4c1a-8f2b-1d5e9a000018",
+  "command": "process-application",
+  "application": {
+    "applicationId": "SIM-18",
+    "channel": "MOBILE_APP",
+    "submittedAt": "2026-07-25T09:14:00Z",
+    "applicant": {
+      "fullName": "Chloe Adams",
+      "dateOfBirth": "1997-11-19",
+      "email": "chloe.adams@example.com",
+      "mobile": "+447700900214",
+      "nationality": "GB",
+      "countryOfResidence": "GB",
+      "taxResidencies": [
+        "GB"
+      ],
+      "residentialStatus": "RENTING",
+      "currentAddress": {
+        "line1": "7 Fletcher Gate",
+        "line2": null,
+        "city": "Nottingham",
+        "postcode": "NG1 5FS",
+        "country": "GB"
+      },
+      "monthsAtAddress": 11,
+      "dependants": 0
+    },
+    "identityDocument": {
+      "type": "PASSPORT",
+      "documentId": "GB5518830",
+      "issuingCountry": "GB",
+      "expiryDate": "2032-08-04"
+    },
+    "employment": {
+      "status": "CONTRACT",
+      "employerName": "Trent Retail Group",
+      "monthsInEmployment": 9
+    },
+    "finances": {
+      "annualIncome": 18000,
+      "monthlyHousingCost": 500,
+      "existingCreditCommitments": 50
+    },
+    "product": {
+      "productCode": "CREDIT_CARD_REWARDS",
+      "requestedCreditLimit": 1500
+    },
+    "delivery": {
+      "useCurrentAddress": true,
+      "address": null
+    },
+    "consents": {
+      "termsAccepted": true,
+      "paperlessStatements": true,
+      "marketingConsent": false
+    }
+  }
+}

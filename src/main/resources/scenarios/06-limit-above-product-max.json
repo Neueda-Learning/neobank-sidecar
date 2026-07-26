@@ -1,0 +1,60 @@
+{
+  "applicationId": "SIM-06",
+  "correlationId": "sim-0006-4c1a-8f2b-1d5e9a000006",
+  "command": "process-application",
+  "application": {
+    "applicationId": "SIM-06",
+    "channel": "MOBILE_APP",
+    "submittedAt": "2026-07-25T09:14:00Z",
+    "applicant": {
+      "fullName": "Stefan Bauer",
+      "dateOfBirth": "1986-09-21",
+      "email": "stefan.bauer@example.com",
+      "mobile": "+447700900204",
+      "nationality": "AT",
+      "countryOfResidence": "GB",
+      "taxResidencies": [
+        "GB"
+      ],
+      "residentialStatus": "OWNER",
+      "currentAddress": {
+        "line1": "3 Arundel Gate",
+        "line2": null,
+        "city": "Sheffield",
+        "postcode": "S1 2HE",
+        "country": "GB"
+      },
+      "monthsAtAddress": 48,
+      "dependants": 0
+    },
+    "identityDocument": {
+      "type": "PASSPORT",
+      "documentId": "AT3391027",
+      "issuingCountry": "AT",
+      "expiryDate": "2030-04-18"
+    },
+    "employment": {
+      "status": "PERMANENT",
+      "employerName": "Steel City Media",
+      "monthsInEmployment": 60
+    },
+    "finances": {
+      "annualIncome": 60000,
+      "monthlyHousingCost": 1200,
+      "existingCreditCommitments": 300
+    },
+    "product": {
+      "productCode": "CREDIT_CARD_REWARDS",
+      "requestedCreditLimit": 10500
+    },
+    "delivery": {
+      "useCurrentAddress": true,
+      "address": null
+    },
+    "consents": {
+      "termsAccepted": true,
+      "paperlessStatements": true,
+      "marketingConsent": false
+    }
+  }
+}

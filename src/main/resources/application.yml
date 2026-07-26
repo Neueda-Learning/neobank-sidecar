@@ -1,0 +1,50 @@
+spring:
+  application:
+    name: neobank-sidecar
+
+  # Dev defaults point at a module repo's own docker-compose MySQL (host port 3307),
+  # schema `sidecar_db`. In compose these are overridden by env.
+  #
+  # NOTE: no createDatabaseIfNotExist here — appuser is not granted CREATE DATABASE.
+  # The schema is created by the repo's db/init/00-databases.sql, which MySQL runs only
+  # on a FRESH volume. If startup fails, see SchemaHint for what to do about it.
+  datasource:
+    url: ${DB_URL:jdbc:mysql://localhost:3307/sidecar_db}
+    username: ${DB_USERNAME:appuser}
+    password: ${DB_PASSWORD:apppass}
+
+  jpa:
+    # Liquibase owns the schema; Hibernate only validates that entities match it.
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+
+sidecar:
+  # Where the module under test lives. This is the address that actually changes:
+  #   http://backend:8080                  the module in this repo's compose (default)
+  #   http://host.docker.internal:8080     a module you are running from IntelliJ
+  # It is also overridable per dispatch from the UI, so you do not have to restart the
+  # sidecar to point it somewhere else for one send.
+  module-url: ${MODULE_URL:http://backend:8080}
+  # The path the module serves. Part of the contract; here so a curl can prove it.
+  module-path: ${MODULE_PATH:/api/v1/applications}
+  # Optional overlay directory of extra *.json scenarios, mounted as a volume. The baked-in
+  # corpus cannot be edited inside a published image, so this is the escape hatch for a team
+  # that needs its own applications. Same-named files win over the baked-in set.
+  scenarios-dir: ${SCENARIOS_DIR:}
+
+cors:
+  allowed-origin-patterns: ${CORS_ALLOWED_ORIGIN_PATTERNS:http://localhost:*,http://127.0.0.1:*}
+
+server:
+  port: ${SERVER_PORT:8080}
+  error:
+    include-message: never
+    include-stacktrace: never
+
+logging:
+  level:
+    liquibase: INFO

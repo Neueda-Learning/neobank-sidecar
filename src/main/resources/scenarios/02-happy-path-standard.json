@@ -1,0 +1,60 @@
+{
+  "applicationId": "SIM-02",
+  "correlationId": "sim-0002-4c1a-8f2b-1d5e9a000002",
+  "command": "process-application",
+  "application": {
+    "applicationId": "SIM-02",
+    "channel": "WEB",
+    "submittedAt": "2026-07-25T09:14:00Z",
+    "applicant": {
+      "fullName": "Jonas Meyer",
+      "dateOfBirth": "1979-02-14",
+      "email": "jonas.meyer@example.com",
+      "mobile": "+447700900456",
+      "nationality": "DE",
+      "countryOfResidence": "GB",
+      "taxResidencies": [
+        "GB"
+      ],
+      "residentialStatus": "MORTGAGE",
+      "currentAddress": {
+        "line1": "8 Wellington Road",
+        "line2": null,
+        "city": "Leeds",
+        "postcode": "LS1 4DY",
+        "country": "GB"
+      },
+      "monthsAtAddress": 96,
+      "dependants": 2
+    },
+    "identityDocument": {
+      "type": "DRIVING_LICENCE",
+      "documentId": "MEYER701794JM9AB",
+      "issuingCountry": "GB",
+      "expiryDate": "2029-08-31"
+    },
+    "employment": {
+      "status": "PERMANENT",
+      "employerName": "Pennine Foods",
+      "monthsInEmployment": 140
+    },
+    "finances": {
+      "annualIncome": 26000,
+      "monthlyHousingCost": 800,
+      "existingCreditCommitments": 120
+    },
+    "product": {
+      "productCode": "CREDIT_CARD_STANDARD",
+      "requestedCreditLimit": 2500
+    },
+    "delivery": {
+      "useCurrentAddress": true,
+      "address": null
+    },
+    "consents": {
+      "termsAccepted": true,
+      "paperlessStatements": true,
+      "marketingConsent": false
+    }
+  }
+}

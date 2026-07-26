@@ -1,0 +1,60 @@
+{
+  "applicationId": "SIM-05",
+  "correlationId": "sim-0005-4c1a-8f2b-1d5e9a000005",
+  "command": "process-application",
+  "application": {
+    "applicationId": "SIM-05",
+    "channel": "MOBILE_APP",
+    "submittedAt": "2026-07-25T09:14:00Z",
+    "applicant": {
+      "fullName": "Priya Raman",
+      "dateOfBirth": "1988-06-03",
+      "email": "priya.raman@example.com",
+      "mobile": "+447700900203",
+      "nationality": "IN",
+      "countryOfResidence": "GB",
+      "taxResidencies": [
+        "GB"
+      ],
+      "residentialStatus": "OWNER",
+      "currentAddress": {
+        "line1": "12 Dale Street",
+        "line2": null,
+        "city": "Manchester",
+        "postcode": "M1 4BT",
+        "country": "GB"
+      },
+      "monthsAtAddress": 72,
+      "dependants": 0
+    },
+    "identityDocument": {
+      "type": "PASSPORT",
+      "documentId": "IN5540982",
+      "issuingCountry": "IN",
+      "expiryDate": "2030-11-02"
+    },
+    "employment": {
+      "status": "PERMANENT",
+      "employerName": "Northgate Logistics",
+      "monthsInEmployment": 84
+    },
+    "finances": {
+      "annualIncome": 60000,
+      "monthlyHousingCost": 1200,
+      "existingCreditCommitments": 300
+    },
+    "product": {
+      "productCode": "CREDIT_CARD_REWARDS",
+      "requestedCreditLimit": 10000
+    },
+    "delivery": {
+      "useCurrentAddress": true,
+      "address": null
+    },
+    "consents": {
+      "termsAccepted": true,
+      "paperlessStatements": true,
+      "marketingConsent": false
+    }
+  }
+}

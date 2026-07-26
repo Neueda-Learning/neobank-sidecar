@@ -1,0 +1,60 @@
+{
+  "applicationId": "SIM-20",
+  "correlationId": "sim-0020-4c1a-8f2b-1d5e9a000020",
+  "command": "process-application",
+  "application": {
+    "applicationId": "SIM-20",
+    "channel": "MOBILE_APP",
+    "submittedAt": "2026-07-25T09:14:00Z",
+    "applicant": {
+      "fullName": "Nadia Haddad",
+      "dateOfBirth": "1990-06-14",
+      "email": "nadia.haddad@example.com",
+      "mobile": "+447700900216",
+      "nationality": "FR",
+      "countryOfResidence": "GB",
+      "taxResidencies": [
+        "GB"
+      ],
+      "residentialStatus": "RENTING",
+      "currentAddress": {
+        "line1": "3 Hertford Street",
+        "line2": null,
+        "city": "Coventry",
+        "postcode": "CV1 5FB",
+        "country": "GB"
+      },
+      "monthsAtAddress": 27,
+      "dependants": 0
+    },
+    "identityDocument": {
+      "type": "PASSPORT",
+      "documentId": "FR3308814",
+      "issuingCountry": "FR",
+      "expiryDate": "2030-09-08"
+    },
+    "employment": {
+      "status": "PERMANENT",
+      "employerName": "Midlands Freight",
+      "monthsInEmployment": 58
+    },
+    "finances": {
+      "annualIncome": 30000,
+      "monthlyHousingCost": 1000,
+      "existingCreditCommitments": 150
+    },
+    "product": {
+      "productCode": "CREDIT_CARD_STANDARD",
+      "requestedCreditLimit": 3000
+    },
+    "delivery": {
+      "useCurrentAddress": true,
+      "address": null
+    },
+    "consents": {
+      "termsAccepted": true,
+      "paperlessStatements": true,
+      "marketingConsent": false
+    }
+  }
+}

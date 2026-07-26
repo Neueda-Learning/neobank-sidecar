@@ -1,0 +1,60 @@
+{
+  "applicationId": "SIM-09",
+  "correlationId": "sim-0009-4c1a-8f2b-1d5e9a000009",
+  "command": "process-application",
+  "application": {
+    "applicationId": "SIM-09",
+    "channel": "MOBILE_APP",
+    "submittedAt": "2026-07-25T09:14:00Z",
+    "applicant": {
+      "fullName": "Ines Da Costa",
+      "dateOfBirth": "12/03/1990",
+      "email": "ines.dacosta(at)example.com",
+      "mobile": "07700 900 999",
+      "nationality": "PRT",
+      "countryOfResidence": "gbr",
+      "taxResidencies": [
+        "GB"
+      ],
+      "residentialStatus": "RENTING",
+      "currentAddress": {
+        "line1": "5 Bothwell Street",
+        "line2": null,
+        "city": "Glasgow",
+        "postcode": "g2 1du",
+        "country": "gbr"
+      },
+      "monthsAtAddress": 40,
+      "dependants": 0
+    },
+    "identityDocument": {
+      "type": "PASSPORT",
+      "documentId": "PT2210984",
+      "issuingCountry": "PRT",
+      "expiryDate": "31-12-2030"
+    },
+    "employment": {
+      "status": "PERMANENT",
+      "employerName": "Clyde Robotics",
+      "monthsInEmployment": 50
+    },
+    "finances": {
+      "annualIncome": 34000,
+      "monthlyHousingCost": 1000,
+      "existingCreditCommitments": 180
+    },
+    "product": {
+      "productCode": "CREDIT_CARD_REWARDS",
+      "requestedCreditLimit": 3000
+    },
+    "delivery": {
+      "useCurrentAddress": true,
+      "address": null
+    },
+    "consents": {
+      "termsAccepted": true,
+      "paperlessStatements": true,
+      "marketingConsent": false
+    }
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "applicationId": "SIM-15",
+  "correlationId": "sim-0015-4c1a-8f2b-1d5e9a000015",
+  "command": "process-application",
+  "application": {
+    "applicationId": "SIM-15",
+    "channel": "MOBILE_APP",
+    "submittedAt": "2026-07-25T09:14:00Z",
+    "applicant": {
+      "fullName": "Viktor Petrov",
+      "dateOfBirth": "1975-05-14",
+      "email": "viktor.petrov@example.com",
+      "mobile": "+447700900211",
+      "nationality": "RU",
+      "countryOfResidence": "GB",
+      "taxResidencies": [
+        "GB"
+      ],
+      "residentialStatus": "RENTING",
+      "currentAddress": {
+        "line1": "27 Curzon Street",
+        "line2": null,
+        "city": "London",
+        "postcode": "W1J 7NT",
+        "country": "GB"
+      },
+      "monthsAtAddress": 8,
+      "dependants": 0
+    },
+    "identityDocument": {
+      "type": "PASSPORT",
+      "documentId": "RU9930118",
+      "issuingCountry": "RU",
+      "expiryDate": "2029-03-27"
+    },
+    "employment": {
+      "status": "SELF_EMPLOYED",
+      "employerName": "Baltic Trade Partners",
+      "monthsInEmployment": 96
+    },
+    "finances": {
+      "annualIncome": 88000,
+      "monthlyHousingCost": 2200,
+      "existingCreditCommitments": 400
+    },
+    "product": {
+      "productCode": "CREDIT_CARD_REWARDS",
+      "requestedCreditLimit": 9000
+    },
+    "delivery": {
+      "useCurrentAddress": true,
+      "address": null
+    },
+    "consents": {
+      "termsAccepted": true,
+      "paperlessStatements": true,
+      "marketingConsent": false
+    }
+  }
+}

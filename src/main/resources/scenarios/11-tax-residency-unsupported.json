@@ -1,0 +1,60 @@
+{
+  "applicationId": "SIM-11",
+  "correlationId": "sim-0011-4c1a-8f2b-1d5e9a000011",
+  "command": "process-application",
+  "application": {
+    "applicationId": "SIM-11",
+    "channel": "MOBILE_APP",
+    "submittedAt": "2026-07-25T09:14:00Z",
+    "applicant": {
+      "fullName": "Rafael Santos",
+      "dateOfBirth": "1991-10-12",
+      "email": "rafael.santos@example.com",
+      "mobile": "+447700900208",
+      "nationality": "BR",
+      "countryOfResidence": "GB",
+      "taxResidencies": [
+        "BR"
+      ],
+      "residentialStatus": "RENTING",
+      "currentAddress": {
+        "line1": "18 Temple Way",
+        "line2": null,
+        "city": "Bristol",
+        "postcode": "BS2 0FZ",
+        "country": "GB"
+      },
+      "monthsAtAddress": 18,
+      "dependants": 0
+    },
+    "identityDocument": {
+      "type": "PASSPORT",
+      "documentId": "BR6640281",
+      "issuingCountry": "BR",
+      "expiryDate": "2030-06-30"
+    },
+    "employment": {
+      "status": "PERMANENT",
+      "employerName": "Harbour Analytics",
+      "monthsInEmployment": 22
+    },
+    "finances": {
+      "annualIncome": 34000,
+      "monthlyHousingCost": 1000,
+      "existingCreditCommitments": 180
+    },
+    "product": {
+      "productCode": "CREDIT_CARD_REWARDS",
+      "requestedCreditLimit": 3000
+    },
+    "delivery": {
+      "useCurrentAddress": true,
+      "address": null
+    },
+    "consents": {
+      "termsAccepted": true,
+      "paperlessStatements": true,
+      "marketingConsent": false
+    }
+  }
+}

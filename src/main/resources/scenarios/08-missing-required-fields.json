@@ -1,0 +1,60 @@
+{
+  "applicationId": "SIM-08",
+  "correlationId": "sim-0008-4c1a-8f2b-1d5e9a000008",
+  "command": "process-application",
+  "application": {
+    "applicationId": "SIM-08",
+    "channel": "MOBILE_APP",
+    "submittedAt": "2026-07-25T09:14:00Z",
+    "applicant": {
+      "fullName": "Marcus Bell",
+      "dateOfBirth": "1990-08-17",
+      "email": null,
+      "mobile": null,
+      "nationality": "GB",
+      "countryOfResidence": "GB",
+      "taxResidencies": [
+        "GB"
+      ],
+      "residentialStatus": "RENTING",
+      "currentAddress": {
+        "line1": "9 Duke Street",
+        "line2": null,
+        "city": "Liverpool",
+        "postcode": null,
+        "country": "GB"
+      },
+      "monthsAtAddress": 20,
+      "dependants": 0
+    },
+    "identityDocument": {
+      "type": "PASSPORT",
+      "documentId": "GB4471902",
+      "issuingCountry": "GB",
+      "expiryDate": "2031-07-09"
+    },
+    "employment": {
+      "status": "PERMANENT",
+      "employerName": null,
+      "monthsInEmployment": 24
+    },
+    "finances": {
+      "annualIncome": 34000,
+      "monthlyHousingCost": 1000,
+      "existingCreditCommitments": 180
+    },
+    "product": {
+      "productCode": "CREDIT_CARD_REWARDS",
+      "requestedCreditLimit": 3000
+    },
+    "delivery": {
+      "useCurrentAddress": true,
+      "address": null
+    },
+    "consents": {
+      "termsAccepted": true,
+      "paperlessStatements": true,
+      "marketingConsent": false
+    }
+  }
+}
