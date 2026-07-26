@@ -47,7 +47,11 @@ async function refreshHealth() {
       `dispatches to <code>${escapeHtml(served.moduleUrl)}${escapeHtml(served.modulePath)}</code>` +
       ` · receives callbacks on <code>${escapeHtml(served.callbackPath)}</code>`;
     el('modulePath').textContent = served.modulePath;
-    el('count').textContent = `${served.scenarioCount} applications in the library`;
+    // Version + build time, because there is no registry tag to inspect: this is how you tell
+    // whether this machine is running the current sidecar or one from before the last release.
+    el('count').innerHTML =
+      `${served.scenarioCount} applications · <span title="when this sidecar was built">` +
+      `v${escapeHtml(served.version)} · ${escapeHtml(shortTime(served.builtAt))}</span>`;
     if (!el('moduleUrl').value) el('moduleUrl').value = served.moduleUrl;
   } catch {
     el('pill').textContent = 'Down';
@@ -216,6 +220,12 @@ function clock(iso) {
   if (!iso) return '—';
   const date = new Date(iso);
   return Number.isNaN(date.getTime()) ? '—' : date.toLocaleTimeString();
+}
+
+function shortTime(iso) {
+  if (!iso || iso === 'not packaged') return 'unpackaged build';
+  const date = new Date(iso);
+  return Number.isNaN(date.getTime()) ? iso : date.toISOString().slice(0, 16).replace('T', ' ');
 }
 
 function shorten(text) {

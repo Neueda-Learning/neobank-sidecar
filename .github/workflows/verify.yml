@@ -7,10 +7,14 @@ name: Verify
 # What that makes this workflow responsible for: main must always be buildable, because a
 # broken commit here is a broken `docker compose up` for every team that rebuilds. The `v1`
 # tag is the gate — move it only once main is green.
+#
+# NO `paths-ignore` here, deliberately, even for markdown. With one, a docs-only merge to main
+# leaves main with no run at all, and in the Actions UI "never ran" looks exactly like "green" —
+# so the one question this workflow exists to answer ("is main safe to tag?") becomes
+# unanswerable. Every commit gets a run; that costs a few CI minutes and buys a straight answer.
 on:
   push:
     branches: ["**"]
-    paths-ignore: ["**.md"]
   pull_request:
   workflow_dispatch:
 

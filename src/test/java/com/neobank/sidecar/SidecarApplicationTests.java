@@ -50,7 +50,12 @@ class SidecarApplicationTests {
                 .andExpect(jsonPath("$.moduleUrl").value("http://localhost:9"))
                 .andExpect(jsonPath("$.modulePath").value("/api/v1/applications"))
                 .andExpect(jsonPath("$.callbackPath").value("/api/v1/callbacks"))
-                .andExpect(jsonPath("$.scenarioCount").value(org.hamcrest.Matchers.greaterThan(20)));
+                .andExpect(jsonPath("$.scenarioCount").value(org.hamcrest.Matchers.greaterThan(20)))
+                // Present either way: a real value from build-info.properties in a packaged jar,
+                // the documented fallback when running unpackaged. What must never happen is the
+                // field going missing, because the UI reads it to say which sidecar this is.
+                .andExpect(jsonPath("$.version").exists())
+                .andExpect(jsonPath("$.builtAt").exists());
     }
 
     @Test

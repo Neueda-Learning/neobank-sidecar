@@ -96,6 +96,22 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <!--
+                  Writes META-INF/build-info.properties (version + build time) into the jar, so
+                  /info and the UI can state WHICH sidecar is running.
+
+                  This matters because of how the sidecar is distributed. A registry tag is
+                  visible in `docker images`; a git-context build's provenance is not, so without
+                  this there is no way to answer "did that team pick up the fix?" across ten
+                  machines. The build timestamp answers it.
+                -->
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>build-info</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <!--
               Surefire runs unit/slice tests (*Test) on `mvn test` — fast, no Docker.

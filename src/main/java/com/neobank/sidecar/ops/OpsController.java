@@ -6,8 +6,9 @@ import java.sql.Connection;
 import java.time.Instant;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 import javax.sql.DataSource;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.info.BuildProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,16 +21,21 @@ public class OpsController {
     private final DataSource dataSource;
     private final DispatchService dispatches;
     private final ScenarioLibrary library;
-    private final String version;
+    private final Optional<BuildProperties> build;
 
+    /**
+     * {@code BuildProperties} is {@link Optional} because it only exists when the
+     * {@code build-info} goal has run — i.e. in a packaged jar, not when someone runs the class
+     * from an IDE. An absent bean must not stop the box from starting.
+     */
     public OpsController(DataSource dataSource,
                         DispatchService dispatches,
                         ScenarioLibrary library,
-                        @Value("${sidecar.version:1.0.0}") String version) {
+                        Optional<BuildProperties> build) {
         this.dataSource = dataSource;
         this.dispatches = dispatches;
         this.library = library;
-        this.version = version;
+        this.build = build;
     }
 
     /**
@@ -60,7 +66,10 @@ public class OpsController {
     public Map<String, Object> info() {
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("service", "neobank-sidecar");
-        body.put("version", version);
+        body.put("version", build.map(BuildProperties::getVersion).orElse("dev"));
+        // When this jar was built. With no registry tag to look at, this is how you tell whether
+        // a machine is running the current sidecar or one from before your last release.
+        body.put("builtAt", build.map(b -> String.valueOf(b.getTime())).orElse("not packaged"));
         body.put("role", "mock orchestrator — sends applications to your module and receives its callback");
         body.put("moduleUrl", dispatches.defaultModuleUrl());
         body.put("modulePath", dispatches.modulePath());
