@@ -44,6 +44,11 @@ open http://localhost:9000         # the sidecar
 that it is cached and costs ~4 seconds, until the sidecar itself changes. To pick up a new
 version, `docker compose up --build sidecar`.
 
+**It is dark with hot orange chrome, and that is deliberate.** Your module's UI is light, glass
+and mint. This one sits open beside it all day, and two windows that look alike are two windows
+you mix up — which here means reading the orchestrator's log and thinking it is your module's.
+**Orange is the orchestrator side; glass is the module side.**
+
 Then: pick **SIM-01**, press **Send**, and watch the row. You should see `202` in the *Ack*
 column immediately and a decision in the *Callback* column a couple of seconds later. That gap
 is the async contract — it is why your module answers `202` before it knows anything.

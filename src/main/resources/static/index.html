@@ -5,55 +5,198 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sidecar — mock orchestrator</title>
     <style>
-      :root { --ink:#1c2430; --muted:#6b7683; --line:#e3e7ec; --brand:#1f6feb;
-              --up:#1a7f37; --down:#c9372c; --warn:#b7791f; --wash:#f6f7f9; }
+      /*
+       * DARK + NEON ORANGE, ON PURPOSE — and committed to, with no light variant.
+       *
+       * This box sits open next to a student's module UI all day, and that one is light,
+       * glass and mint (the product design system). Two windows that look alike are two
+       * windows you mix up, and mixing these two up means reading the orchestrator's log and
+       * thinking it is your module's. So this is not a theme, it is a NAME TAG: dark shell,
+       * hot orange chrome. Orange is the orchestrator side; glass is the module side.
+       *
+       * Two rules held while doing it:
+       *  1. Orange is CHROME only — brand, headings, buttons, focus, rules. It is never a
+       *     status. Statuses keep their own hues, because a status you have to think about is
+       *     a status you misread.
+       *  2. REFERRED is a clear yellow (#ffd60a), not amber, so it cannot be confused with
+       *     the orange chrome around it. That was the one real collision risk here.
+       *
+       * Every text colour was measured against the surface it sits on and holds >= 4.5:1
+       * (lowest: neutral grey 4.75, brand orange 6.07, primary text 15.28). If you change one,
+       * measure it again — contrast on a dark ground is not something to eyeball.
+       */
+      :root {
+        --page:    #080706;   /* the shell                             */
+        --card:    #1f1915;   /* panels — 1.158 against the page       */
+        --input:   #040302;   /* inputs, JSON, code — the darkest layer */
+        --line:    #3d3129;   /* borders                               */
+        --line-lt: #52433a;   /* hover borders                         */
+
+        --ink:     #f7efe7;   /* primary text, 15.28:1                 */
+        --muted:   #a89c90;   /* secondary text, 6.48:1                */
+
+        --neon:    #ff6a1f;   /* the whole point, 6.07:1               */
+        --neon-lt: #ff8a4c;
+        --glow:    rgba(255, 106, 31, .32);
+        --wash:    rgba(255, 106, 31, .07);
+
+        --up:      #3ddc84;   /* ACCEPTED  9.74:1 */
+        --down:    #ff6b6b;   /* REJECTED  6.26:1 */
+        --warn:    #ffd60a;   /* REFERRED 12.31:1 */
+        --info:    #5cc8ff;   /* waiting   9.24:1 */
+        --dim:     #8f8479;   /* neutral   4.75:1 */
+      }
+
       * { box-sizing: border-box; }
-      body { margin:0; background:var(--wash); color:var(--ink); font:14px/1.5 -apple-system,
-             BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; }
-      main { max-width:1080px; margin:0 auto; padding:24px 16px 48px; }
-      .card { background:#fff; border:1px solid var(--line); border-radius:12px; padding:16px 18px;
-              margin-bottom:18px; }
-      .bar { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
-      .pill { font-size:12px; font-weight:700; padding:5px 10px; border-radius:999px; color:#fff;
-              background:var(--muted); }
-      .up { background:var(--up); } .down { background:var(--down); }
-      .who { font-weight:600; } .sub { color:var(--muted); font-size:13px; }
-      .spacer { margin-left:auto; }
-      h2 { font-size:13px; text-transform:uppercase; letter-spacing:.04em; color:var(--muted);
-           margin:0 0 12px; }
-      label { display:block; font-size:12px; font-weight:600; color:var(--muted);
-              margin:12px 0 4px; }
-      label.inline { display:inline-flex; align-items:center; gap:6px; font-weight:500;
-                     margin:0; text-transform:none; }
-      select, input[type=text], textarea { width:100%; padding:8px 10px; border:1px solid var(--line);
-              border-radius:8px; background:#fff; color:var(--ink); font:inherit; }
-      textarea { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:12px;
-                 min-height:190px; resize:vertical; }
-      button { padding:8px 14px; border:1px solid var(--line); border-radius:8px; background:#fff;
-               color:var(--ink); font:inherit; font-weight:600; cursor:pointer; }
-      button.primary { background:var(--brand); border-color:var(--brand); color:#fff; }
-      button:disabled { opacity:.5; cursor:default; }
-      .row { display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-top:14px; }
-      table { width:100%; border-collapse:collapse; background:#fff; border:1px solid var(--line);
-              border-radius:12px; overflow:hidden; }
-      th,td { text-align:left; padding:10px 12px; border-bottom:1px solid var(--line);
-              vertical-align:top; }
-      th { font-size:12px; text-transform:uppercase; letter-spacing:.03em; color:var(--muted); }
-      .mono { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:12px; }
-      .st { font-size:11px; font-weight:700; padding:3px 8px; border-radius:999px;
-            background:#eef1f4; color:var(--muted); white-space:nowrap; }
-      .st-ACCEPTED { background:#e6f4ea; color:var(--up); }
-      .st-REJECTED { background:#fdecea; color:var(--down); }
-      .st-REFERRED { background:#fdf4e3; color:var(--warn); }
-      .st-waiting  { background:#e7f0fe; color:var(--brand); }
-      .st-ok { background:#e6f4ea; color:var(--up); }
-      .st-bad { background:#fdf4e3; color:var(--warn); }
-      .st-dead { background:#fdecea; color:var(--down); }
-      .empty { padding:28px; text-align:center; color:var(--muted); }
-      .note { color:var(--muted); font-size:12px; margin-top:14px; }
-      .trait { color:var(--muted); font-size:13px; margin-top:8px; min-height:20px; }
-      code { background:var(--wash); padding:1px 5px; border-radius:4px; font-size:12px; }
-      .scroll { overflow-x:auto; }
+
+      body {
+        margin: 0;
+        background: var(--page);
+        color: var(--ink);
+        font: 14px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        /* One warm bloom behind the header, so the window is recognisable from a glance at the
+           dock or a tab strip. Fixed, so it does not travel with the scroll. */
+        background-image: radial-gradient(900px 380px at 50% -180px, rgba(255,106,31,.16), transparent 70%);
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+      }
+
+      main { max-width: 1080px; margin: 0 auto; padding: 24px 16px 48px; }
+
+      .card {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 16px 18px;
+        margin-bottom: 18px;
+      }
+      /* The identity bar: the one element that gets the full neon edge. */
+      .card:first-child {
+        border-top: 2px solid var(--neon);
+        box-shadow: 0 -1px 22px -6px var(--glow);
+      }
+
+      .bar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+      .spacer { margin-left: auto; }
+
+      .who { font-weight: 600; letter-spacing: .01em; }
+      .sub { color: var(--muted); font-size: 13px; }
+
+      .pill {
+        font-size: 12px; font-weight: 700; padding: 5px 10px; border-radius: 999px;
+        background: rgba(143,132,121,.16); color: var(--dim);
+        border: 1px solid var(--line);
+      }
+      .up   { background: rgba(61,220,132,.14);  color: var(--up);   border-color: rgba(61,220,132,.4); }
+      .down { background: rgba(255,107,107,.14); color: var(--down); border-color: rgba(255,107,107,.4); }
+
+      h2 {
+        font-size: 13px; text-transform: uppercase; letter-spacing: .1em;
+        color: var(--neon); margin: 0 0 12px;
+      }
+
+      label {
+        display: block; font-size: 12px; font-weight: 600; color: var(--muted);
+        margin: 12px 0 4px;
+      }
+      label.inline {
+        display: inline-flex; align-items: center; gap: 6px; font-weight: 500;
+        margin: 0; text-transform: none; color: var(--ink);
+      }
+      input[type=checkbox] { accent-color: var(--neon); }
+
+      select, input[type=text], textarea {
+        width: 100%; padding: 8px 10px;
+        border: 1px solid var(--line); border-radius: 8px;
+        background: var(--input); color: var(--ink);
+        font: inherit;
+      }
+      select:hover, input[type=text]:hover, textarea:hover { border-color: var(--line-lt); }
+      /* One loud focus treatment everywhere — half of this page is a form. */
+      select:focus-visible, input:focus-visible, textarea:focus-visible, button:focus-visible {
+        outline: 2px solid var(--neon);
+        outline-offset: 1px;
+        border-color: var(--neon);
+      }
+      textarea {
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px;
+        min-height: 190px; resize: vertical;
+        caret-color: var(--neon);
+      }
+
+      button {
+        padding: 8px 14px; border: 1px solid var(--line); border-radius: 8px;
+        background: #2a231d; color: var(--ink); font: inherit; font-weight: 600;
+        cursor: pointer;
+      }
+      button:hover { border-color: var(--neon); color: var(--neon-lt); }
+      button.primary {
+        background: var(--neon); border-color: var(--neon); color: #1a0d05;
+        box-shadow: 0 0 0 0 var(--glow);
+      }
+      button.primary:hover {
+        background: var(--neon-lt); border-color: var(--neon-lt); color: #1a0d05;
+        box-shadow: 0 0 18px -2px var(--glow);
+      }
+      button:disabled { opacity: .45; cursor: default; box-shadow: none; }
+      button:disabled:hover { border-color: var(--line); color: var(--ink); }
+
+      .row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-top: 14px; }
+
+      table {
+        width: 100%; border-collapse: collapse;
+        background: var(--card); border: 1px solid var(--line);
+        border-radius: 12px; overflow: hidden;
+      }
+      th, td {
+        text-align: left; padding: 10px 12px;
+        border-bottom: 1px solid var(--line); vertical-align: top;
+      }
+      th {
+        font-size: 12px; text-transform: uppercase; letter-spacing: .08em;
+        color: var(--muted); background: #17120f;
+        border-bottom: 1px solid var(--neon);
+      }
+      tbody tr:hover { background: var(--wash); }
+      tbody tr:last-child td { border-bottom: none; }
+
+      .mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; }
+
+      .st {
+        font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 999px;
+        background: rgba(143,132,121,.16); color: var(--dim); white-space: nowrap;
+        border: 1px solid transparent;
+      }
+      .st-ACCEPTED { background: rgba(61,220,132,.14);  color: var(--up);   border-color: rgba(61,220,132,.35); }
+      .st-REJECTED { background: rgba(255,107,107,.14); color: var(--down); border-color: rgba(255,107,107,.35); }
+      .st-REFERRED { background: rgba(255,214,10,.14);  color: var(--warn); border-color: rgba(255,214,10,.35); }
+      .st-waiting  { background: rgba(92,200,255,.14);  color: var(--info); border-color: rgba(92,200,255,.35); }
+      .st-ok       { background: rgba(61,220,132,.14);  color: var(--up);   border-color: rgba(61,220,132,.35); }
+      .st-bad      { background: rgba(255,214,10,.14);  color: var(--warn); border-color: rgba(255,214,10,.35); }
+      .st-dead     { background: rgba(255,107,107,.14); color: var(--down); border-color: rgba(255,107,107,.35); }
+
+      .empty { padding: 28px; text-align: center; color: var(--muted); }
+      .note { color: var(--muted); font-size: 12px; margin-top: 14px; }
+      .trait { color: var(--muted); font-size: 13px; margin-top: 8px; min-height: 20px; }
+
+      code {
+        background: var(--input); color: var(--neon-lt);
+        padding: 1px 5px; border-radius: 4px; font-size: 12px;
+        border: 1px solid var(--line);
+      }
+      strong { color: var(--ink); }
+
+      .scroll { overflow-x: auto; }
+
+      /* Dark scrollbars, or the light default undoes the effect on the wide table. */
+      .scroll::-webkit-scrollbar, textarea::-webkit-scrollbar { height: 10px; width: 10px; }
+      .scroll::-webkit-scrollbar-track, textarea::-webkit-scrollbar-track { background: var(--input); }
+      .scroll::-webkit-scrollbar-thumb, textarea::-webkit-scrollbar-thumb {
+        background: var(--line); border-radius: 999px;
+      }
+      .scroll::-webkit-scrollbar-thumb:hover, textarea::-webkit-scrollbar-thumb:hover {
+        background: var(--line-lt);
+      }
     </style>
   </head>
   <body>
