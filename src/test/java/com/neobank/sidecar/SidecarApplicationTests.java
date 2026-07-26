@@ -3,6 +3,7 @@ package com.neobank.sidecar;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -49,7 +50,7 @@ class SidecarApplicationTests {
                 .andExpect(jsonPath("$.service").value("neobank-sidecar"))
                 .andExpect(jsonPath("$.moduleUrl").value("http://localhost:9"))
                 .andExpect(jsonPath("$.modulePath").value("/api/v1/applications"))
-                .andExpect(jsonPath("$.callbackPath").value("/api/v1/callbacks"))
+                .andExpect(jsonPath("$.statusUpdatePath").value("/api/v1/applications/{applicationId}"))
                 .andExpect(jsonPath("$.scenarioCount").value(org.hamcrest.Matchers.greaterThan(20)))
                 // Present either way: a real value from build-info.properties in a packaged jar,
                 // the documented fallback when running unpackaged. What must never happen is the
@@ -85,10 +86,10 @@ class SidecarApplicationTests {
                 .andExpect(jsonPath("$.ackHttpStatus").value(0))
                 .andExpect(jsonPath("$.callbackStatus").doesNotExist());
 
-        mvc.perform(post("/api/v1/callbacks")
+        mvc.perform(put("/api/v1/applications/{id}", "IT-MEET")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                                {"applicationId":"IT-MEET","serviceId":"attempt01",
+                                {"serviceId":"attempt01",
                                  "status":"ACCEPTED","comment":"decided"}
                                 """))
                 .andExpect(status().isOk())
@@ -106,10 +107,10 @@ class SidecarApplicationTests {
 
     @Test
     void aCallbackForSomethingNeverSentIsKeptAndFlagged() throws Exception {
-        mvc.perform(post("/api/v1/callbacks")
+        mvc.perform(put("/api/v1/applications/{id}", "IT-GHOST")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                                {"applicationId":"IT-GHOST","serviceId":"attempt07",
+                                {"serviceId":"attempt07",
                                  "status":"REFERRED","comment":"who asked?"}
                                 """))
                 .andExpect(status().isOk());
@@ -132,10 +133,10 @@ class SidecarApplicationTests {
 
     @Test
     void theLogCanBeCleared() throws Exception {
-        mvc.perform(post("/api/v1/callbacks")
+        mvc.perform(put("/api/v1/applications/{id}", "IT-CLEAR")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                                {"applicationId":"IT-CLEAR","serviceId":"attempt01","status":"ACCEPTED"}
+                                {"serviceId":"attempt01","status":"ACCEPTED"}
                                 """))
                 .andExpect(status().isOk());
 

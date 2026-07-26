@@ -45,7 +45,7 @@ async function refreshHealth() {
     el('pill').className = 'pill ' + (up ? 'up' : 'down');
     el('sub').innerHTML =
       `dispatches to <code>${escapeHtml(served.moduleUrl)}${escapeHtml(served.modulePath)}</code>` +
-      ` · receives callbacks on <code>${escapeHtml(served.callbackPath)}</code>`;
+      ` · receives status updates on <code>PUT ${escapeHtml(served.statusUpdatePath)}</code>`;
     el('modulePath').textContent = served.modulePath;
     // Version + build time, because there is no registry tag to inspect: this is how you tell
     // whether this machine is running the current sidecar or one from before the last release.

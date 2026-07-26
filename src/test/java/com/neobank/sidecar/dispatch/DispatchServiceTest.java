@@ -7,7 +7,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.neobank.sidecar.SidecarDtos.CallbackBody;
+import com.neobank.sidecar.SidecarDtos.ApplicationStatusUpdate;
 import com.neobank.sidecar.SidecarDtos.DispatchRequest;
 import com.neobank.sidecar.SidecarDtos.ExchangeView;
 import com.neobank.sidecar.scenario.ScenarioLibrary;
@@ -90,7 +90,8 @@ class DispatchServiceTest {
         when(exchanges.findFirstByApplicationIdAndCallbackAtIsNullOrderByIdAsc("SIM-01"))
                 .thenReturn(Optional.of(open));
 
-        service.recordCallback(new CallbackBody("SIM-01", "attempt01", "ACCEPTED", "rules passed"));
+        service.recordStatusUpdate("SIM-01",
+                new ApplicationStatusUpdate("attempt01", "ACCEPTED", "rules passed"));
 
         assertThat(open.hasCallback()).isTrue();
         assertThat(open.getCallbackStatus()).isEqualTo("ACCEPTED");
@@ -106,7 +107,8 @@ class DispatchServiceTest {
                 .thenReturn(Optional.empty());
         ArgumentCaptor<Exchange> saved = ArgumentCaptor.forClass(Exchange.class);
 
-        service.recordCallback(new CallbackBody("GHOST", "attempt01", "ACCEPTED", "late"));
+        service.recordStatusUpdate("GHOST",
+                new ApplicationStatusUpdate("attempt01", "ACCEPTED", "late"));
 
         verify(exchanges).save(saved.capture());
         Exchange row = saved.getValue();

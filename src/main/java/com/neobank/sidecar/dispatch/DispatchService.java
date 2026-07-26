@@ -1,6 +1,6 @@
 package com.neobank.sidecar.dispatch;
 
-import com.neobank.sidecar.SidecarDtos.CallbackBody;
+import com.neobank.sidecar.SidecarDtos.ApplicationStatusUpdate;
 import com.neobank.sidecar.SidecarDtos.DispatchRequest;
 import com.neobank.sidecar.SidecarDtos.ExchangeView;
 import com.neobank.sidecar.scenario.ScenarioLibrary;
@@ -113,20 +113,20 @@ public class DispatchService {
      * end.</p>
      */
     @Transactional
-    public void recordCallback(CallbackBody callback) {
+    public void recordStatusUpdate(String applicationId, ApplicationStatusUpdate update) {
         Optional<Exchange> match = exchanges
-                .findFirstByApplicationIdAndCallbackAtIsNullOrderByIdAsc(callback.applicationId());
+                .findFirstByApplicationIdAndCallbackAtIsNullOrderByIdAsc(applicationId);
 
         Exchange exchange = match.orElseGet(() -> {
-            log.warn("CALLBACK {} from {} matched no open dispatch — recorded as unsolicited",
-                    callback.applicationId(), callback.serviceId());
-            return Exchange.unsolicited(callback.applicationId());
+            log.warn("STATUS UPDATE {} from {} matched no open dispatch — recorded as unsolicited",
+                    applicationId, update.serviceId());
+            return Exchange.unsolicited(applicationId);
         });
 
-        exchange.recordCallback(callback.serviceId(), callback.status(), callback.comment());
+        exchange.recordCallback(update.serviceId(), update.status(), update.comment());
         exchanges.save(exchange);
-        log.info("CALLBACK {} {} from {} ({})", callback.applicationId(), callback.status(),
-                callback.serviceId(), callback.comment());
+        log.info("STATUS UPDATE {} {} from {} ({})", applicationId, update.status(),
+                update.serviceId(), update.comment());
     }
 
     @Transactional(readOnly = true)

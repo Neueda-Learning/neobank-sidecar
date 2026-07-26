@@ -73,7 +73,7 @@ public class OpsController {
         body.put("role", "mock orchestrator — sends applications to your module and receives its callback");
         body.put("moduleUrl", dispatches.defaultModuleUrl());
         body.put("modulePath", dispatches.modulePath());
-        body.put("callbackPath", "/api/v1/callbacks");
+        body.put("statusUpdatePath", "/api/v1/applications/{applicationId}");
         body.put("scenarioCount", library.catalogue().get("count"));
         return body;
     }

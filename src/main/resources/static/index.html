@@ -251,7 +251,7 @@
         </div>
         <p class="note" style="margin-top:12px">
           Both halves of the contract. <strong>Ack</strong> is what your module answered
-          immediately; <strong>Callback</strong> is the decision it POSTed back afterwards — the
+          immediately; <strong>Status</strong> is the outcome it PUT back afterwards — the
           half you cannot see with curl.
         </p>
       </div>
@@ -261,7 +261,7 @@
           <thead>
             <tr>
               <th>Application</th><th>Scenario</th><th>Sent</th>
-              <th>Ack</th><th>Callback</th><th>Comment</th>
+              <th>Ack</th><th>Status</th><th>Comment</th>
             </tr>
           </thead>
           <tbody id="rows">
@@ -272,7 +272,7 @@
 
       <p class="note">
         This box is a development aid, not part of the contract — your module never calls it back
-        by name, it just POSTs <code>/api/v1/callbacks</code> at whatever
+        by name, it just PUTs <code>/api/v1/applications/{applicationId}</code> at whatever
         <code>ORCHESTRATOR_URL</code> says. Point that at the real orchestrator and nothing in your
         module changes.
       </p>

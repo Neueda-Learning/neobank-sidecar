@@ -11,15 +11,15 @@ public final class SidecarDtos {
     }
 
     /**
-     * What a module POSTs to {@code /api/v1/callbacks}.
+     * What a module PUTs to {@code /api/v1/applications/{applicationId}} once it has an answer.
      *
      * <p><b>Do not add fields.</b> This is a copy of the real orchestrator's
-     * {@code SagaDtos.CallbackBody} — exactly four fields — and the only reason the sidecar is
-     * worth anything is that it accepts precisely what the orchestrator accepts. A module that
-     * satisfies this record satisfies the real thing.</p>
+     * {@code SagaDtos.ApplicationStatusUpdate} — exactly three, with the application id in the URL
+     * rather than the body — and the only reason the sidecar is worth anything is that it accepts
+     * precisely what the orchestrator accepts. A module that satisfies this record satisfies the
+     * real thing.</p>
      */
-    public record CallbackBody(
-            @NotBlank String applicationId,
+    public record ApplicationStatusUpdate(
             @NotBlank String serviceId,
             @NotBlank String status,
             String comment) {

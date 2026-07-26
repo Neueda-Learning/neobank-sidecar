@@ -7,7 +7,7 @@ It does two things and deliberately nothing else:
 
 1. **Sends applications to your module** — `POST http://your-module/api/v1/applications`, using
    the same envelope the real orchestrator sends.
-2. **Receives your module's callback** — it serves `POST /api/v1/callbacks`, the endpoint your
+2. **Receives your module's status update** — it serves `PUT /api/v1/applications/{applicationId}`, the endpoint your
    module reports its decision to.
 
 Point 2 is the reason this exists. Without something listening on `ORCHESTRATOR_URL`, your
@@ -17,7 +17,7 @@ both halves land in one row of one table and appear on one page.
 ```
 sidecar  ──POST /api/v1/applications──▶  your module
          ◀─────── 202 in-progress ──────      │  decides off-thread
-         ◀──POST /api/v1/callbacks ───────────┘
+         ◀──PUT /api/v1/applications/{id}─────┘
          ─────── 200 received ──────────▶
 ```
 
@@ -86,15 +86,15 @@ Your module calls exactly one of these. The rest are for you and the UI.
 
 | | Endpoint | What it is |
 |---|---|---|
-| **contract** | `POST /api/v1/callbacks` | **What your module calls.** Four fields: `applicationId`, `serviceId`, `status`, `comment`. Answers `200 {"received":true,…}`. |
+| **contract** | `PUT /api/v1/applications/{applicationId}` | **What your module calls.** Three fields — `serviceId`, `status`, `comment` — with the id in the URL. Answers `200 {"received":true,…}`. |
 | tool | `GET /api/v1/scenarios` | The library, with every envelope attached. |
 | tool | `POST /api/v1/dispatch` | Send one: `{scenarioId}` or `{envelope}`, plus optional `moduleUrl` and `freshId`. |
 | tool | `GET /api/v1/dispatches` | The exchange log, newest first. |
 | tool | `DELETE /api/v1/dispatches` | Clear the log. |
 | ops | `GET /health` · `GET /info` | Up, and where it is pointing. |
 
-`/api/v1/callbacks` is a **copy of the real orchestrator's endpoint** and has to stay exact — the
-path, the four fields, and the always-`200`. If it were more forgiving than the orchestrator, a
+That `PUT` is a **copy of the real orchestrator's endpoint** and has to stay exact — the path, the
+three fields, and the always-`200`. If it were more forgiving than the orchestrator, a
 broken module could look finished here and fail in the system stack. So: a late, duplicate or
 misdirected callback is accepted and recorded as an `unsolicited` row rather than refused.
 
@@ -274,7 +274,7 @@ It has **no state machine, no step ordering, no timeout sweeper and no retry.** 
 orchestrator (`attempt-b00`) has all four. Every one of them added here would be a second
 implementation of something that already exists, and a mock that drifts from the thing it mocks is
 worse than no mock at all. The value is narrow and real: the contract is two-way, and until
-something answers on `/api/v1/callbacks` a team can only see half of it.
+something answers on `/api/v1/applications/{applicationId}` a team can only see half of it.
 
 It also serves **modules 1–8** only. Modules 9 and 10 consume the journey rather than serve a step,
 so there is nothing here to send them; `GET /api/v1/dispatches` is the miniature of the journey
