@@ -1,0 +1,48 @@
+# Keep the application we sent, so it can be read back.
+#
+# The sidecar used to record only that a dispatch happened — id, url, ack — and throw the
+# envelope away. That was enough while the only question was "did my decision come back". It is
+# not enough now the sidecar also serves GET /api/v1/applications/{id}, the endpoint a module
+# calls when it needs applicant data it correctly did not store locally.
+#
+# We store the envelope's `application` field, not the whole envelope: that is the api-contract §4
+# object, and it is exactly what the real orchestrator returns from the same URL. Storing the
+# envelope would mean unwrapping it on every read and inventing a second shape to keep in step.
+#
+# A NEW change set rather than an edit to 001. Every deployed sidecar has already applied 001, and
+# changing an applied change set is the one thing this project refuses to do — Liquibase compares
+# checksums and would refuse to start. A fresh database creates the table then immediately alters
+# it, which is mildly wasteful and exactly what obeying that rule looks like.
+#
+# VARCHAR, not TEXT — see the note in 001. H2 and MySQL disagree on how TEXT maps and
+# ddl-auto=validate then fails on one of them.
+#
+# VARCHAR(4000) and NOT 8000, which is where this landed first and which MySQL refuses:
+#
+#   Row size too large. The maximum row size for the used table type ... is 65535.
+#
+# InnoDB checks that limit at ALTER time against DECLARED sizes, and utf8mb4 costs 4 bytes per
+# character. `ack_body VARCHAR(8000)` alone is already 32000 of the 65535; the rest of the table
+# is ~4044, leaving ~7372 characters for this column. 4000 fits with 13 KB of row to spare.
+#
+# 4000 is not a guess either way: the largest `application` in the whole 26-scenario corpus is
+# 1097 characters, so this is 3.6x the real maximum.
+#
+# H2 has no such limit and passed this change set happily — only ExchangeRepositoryIT, which runs
+# against real MySQL, caught it. That test earning its keep for the second time is why it is not
+# an H2 test.
+databaseChangeLog:
+  - changeSet:
+      id: 002-add-application-json
+      author: sidecar
+      changes:
+        - addColumn:
+            tableName: exchange
+            columns:
+              - column:
+                  name: application_json
+                  type: VARCHAR(4000)
+      rollback:
+        - dropColumn:
+            tableName: exchange
+            columnName: application_json

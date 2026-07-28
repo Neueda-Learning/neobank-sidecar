@@ -21,6 +21,16 @@ import java.time.Instant;
 @Table(name = "exchange")
 public class Exchange {
 
+    /**
+     * Column width for {@link #applicationJson}, and a hard ceiling rather than a comfortable one.
+     *
+     * <p>MySQL caps a row at 65535 bytes and counts <em>declared</em> VARCHAR sizes at 4 bytes per
+     * character, so this table cannot afford a second 8000. The largest application in the corpus
+     * is ~1100 characters; 4000 is 3.6x that and leaves 13 KB of row spare. See
+     * {@code 002-add-application-json.yaml} for the arithmetic.</p>
+     */
+    public static final int APPLICATION_JSON_MAX = 4000;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -60,18 +70,32 @@ public class Exchange {
     @Column(name = "callback_at")
     private Instant callbackAt;
 
+    /**
+     * The api-contract §4 application we sent, as JSON — what {@code GET
+     * /api/v1/applications/{id}} reads back.
+     *
+     * <p>The envelope's {@code application} field, not the whole envelope: that is the object the
+     * real orchestrator serves from the same URL, and keeping the two identical is the only reason
+     * reading it here is worth anything. Null on an unsolicited row (nobody dispatched it) and on
+     * an envelope that carried no application.</p>
+     */
+    @Column(name = "application_json", length = APPLICATION_JSON_MAX)
+    private String applicationJson;
+
     protected Exchange() {
         // JPA
     }
 
     /** A dispatch we are about to make. */
     public static Exchange dispatched(String applicationId, String correlationId,
-                                      String scenarioId, String moduleUrl) {
+                                      String scenarioId, String moduleUrl,
+                                      String applicationJson) {
         Exchange exchange = new Exchange();
         exchange.applicationId = applicationId;
         exchange.correlationId = correlationId;
         exchange.scenarioId = scenarioId;
         exchange.moduleUrl = moduleUrl;
+        exchange.applicationJson = applicationJson;
         exchange.sentAt = Instant.now();
         return exchange;
     }
@@ -158,6 +182,10 @@ public class Exchange {
 
     public Instant getCallbackAt() {
         return callbackAt;
+    }
+
+    public String getApplicationJson() {
+        return applicationJson;
     }
 
     /**

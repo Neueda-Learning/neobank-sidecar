@@ -1,5 +1,7 @@
 package com.neobank.sidecar.dispatch;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.neobank.sidecar.SidecarDtos.ApplicationStatusUpdate;
 import com.neobank.sidecar.SidecarDtos.DispatchRequest;
 import com.neobank.sidecar.SidecarDtos.ExchangeView;
@@ -34,6 +36,7 @@ public class DispatchService {
     private final ExchangeRepository exchanges;
     private final ScenarioLibrary library;
     private final RestClient restClient;
+    private final ObjectMapper json;
     private final String defaultModuleUrl;
     private final String modulePath;
 
@@ -43,11 +46,13 @@ public class DispatchService {
     public DispatchService(ExchangeRepository exchanges,
                            ScenarioLibrary library,
                            RestClient restClient,
+                           ObjectMapper json,
                            @Value("${sidecar.module-url:http://backend:8080}") String defaultModuleUrl,
                            @Value("${sidecar.module-path:/api/v1/applications}") String modulePath) {
         this.exchanges = exchanges;
         this.library = library;
         this.restClient = restClient;
+        this.json = json;
         this.defaultModuleUrl = defaultModuleUrl;
         this.modulePath = modulePath;
     }
@@ -80,7 +85,9 @@ public class DispatchService {
                 text(envelope.get("applicationId")),
                 text(envelope.get("correlationId")),
                 request.scenarioId(),
-                moduleUrl));
+                moduleUrl,
+                // Stored AFTER any freshId rewrite, so what can be read back is what was sent.
+                writeJson(envelope.get("application"))));
 
         String url = moduleUrl + modulePath;
         try {
@@ -132,6 +139,99 @@ public class DispatchService {
     @Transactional(readOnly = true)
     public List<ExchangeView> log() {
         return exchanges.findAllByOrderByIdDesc().stream().map(ExchangeView::of).toList();
+    }
+
+    /**
+     * The application behind an id, as the api-contract §4 object — a copy of the real
+     * orchestrator's {@code GET /api/v1/applications/{id}}.
+     *
+     * <p>Unlike everything else in this class, this is <b>contract surface</b>: your module calls
+     * it when it needs applicant data it correctly did not store locally, and it must answer with
+     * the same shape the orchestrator does. The sidecar can be truthful here because it is not
+     * inventing anything — it returns the application it sent you.</p>
+     */
+    @Transactional(readOnly = true)
+    public Optional<Map<String, Object>> application(String applicationId) {
+        return exchanges
+                .findFirstByApplicationIdAndApplicationJsonIsNotNullOrderByIdDesc(applicationId)
+                .map(e -> readJson(e.getApplicationJson()));
+    }
+
+    /**
+     * Applications whose applicant name contains {@code name}, newest first — a copy of the
+     * orchestrator's {@code GET /api/v1/applications?name=}.
+     *
+     * <p>Matched by parsing each stored application rather than by a denormalised column. The
+     * orchestrator has a whole board to index; this box has a few dozen rows, and a second copy of
+     * the name would be a second thing that can drift from the row it describes.</p>
+     *
+     * <p>One entry per applicationId: SIM-25 deliberately re-sends SIM-01's id, and a search that
+     * returned the same application twice would look like a bug in the module.</p>
+     */
+    @Transactional(readOnly = true)
+    public List<Map<String, Object>> applicationsByName(String name) {
+        if (isBlank(name)) {
+            return List.of();
+        }
+        String needle = name.strip().toLowerCase();
+        Map<String, Map<String, Object>> byId = new LinkedHashMap<>();
+        for (Exchange e : exchanges.findByApplicationJsonIsNotNullOrderByIdDesc()) {
+            Map<String, Object> application = readJson(e.getApplicationJson());
+            if (application.isEmpty() || !fullNameOf(application).contains(needle)) {
+                continue;
+            }
+            byId.putIfAbsent(String.valueOf(e.getApplicationId()), application);
+        }
+        return List.copyOf(byId.values());
+    }
+
+    @SuppressWarnings("unchecked")
+    private static String fullNameOf(Map<String, Object> application) {
+        Object applicant = application.get("applicant");
+        if (!(applicant instanceof Map<?, ?> map)) {
+            return "";
+        }
+        Object fullName = ((Map<String, Object>) map).get("fullName");
+        return fullName == null ? "" : String.valueOf(fullName).toLowerCase();
+    }
+
+    /**
+     * The application, as JSON, ready to store — or null, which costs only the read-back.
+     *
+     * <p><b>Never truncated.</b> Half a JSON document is not a smaller JSON document, it is a
+     * parse error waiting to be served to a module as if it were an application. Too big is
+     * therefore stored as nothing, loudly, and the dispatch still goes out: sending is this box's
+     * job, keeping a copy is a convenience.</p>
+     */
+    private String writeJson(Object application) {
+        if (!(application instanceof Map<?, ?>)) {
+            // Scenario 08 and friends send an envelope with no application. Nothing to keep.
+            return null;
+        }
+        try {
+            String encoded = json.writeValueAsString(application);
+            if (encoded.length() > Exchange.APPLICATION_JSON_MAX) {
+                log.warn("Application is {} chars, over the {} the column holds — it was still "
+                                + "sent, but GET /api/v1/applications/{} will answer 404",
+                        encoded.length(), Exchange.APPLICATION_JSON_MAX,
+                        text(((Map<?, ?>) application).get("applicationId")));
+                return null;
+            }
+            return encoded;
+        } catch (Exception e) {
+            log.warn("Could not store the application we sent: {}", e.toString());
+            return null;
+        }
+    }
+
+    private Map<String, Object> readJson(String applicationJson) {
+        try {
+            return applicationJson == null ? Map.of()
+                    : json.readValue(applicationJson, new TypeReference<Map<String, Object>>() { });
+        } catch (Exception e) {
+            log.warn("Unreadable stored application: {}", e.toString());
+            return Map.of();
+        }
     }
 
     public void clear() {

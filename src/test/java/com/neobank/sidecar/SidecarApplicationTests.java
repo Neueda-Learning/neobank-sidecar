@@ -105,6 +105,57 @@ class SidecarApplicationTests {
                         .value(org.hamcrest.Matchers.hasItem(false)));
     }
 
+    /**
+     * Send a real scenario, then read the application back the way a module does. This is the
+     * round trip the whole 002 change set exists for: through Liquibase, through the new column,
+     * through {@code ddl-auto=validate}, and out again in the §4 shape.
+     */
+    @Test
+    void theApplicationWeSentCanBeReadBackByItsId() throws Exception {
+        mvc.perform(post("/api/v1/dispatch")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"scenarioId\":\"SIM-01\"}"))
+                .andExpect(status().isOk());
+
+        mvc.perform(get("/api/v1/applications/{id}", "SIM-01"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.applicationId").value("SIM-01"))
+                .andExpect(jsonPath("$.applicant.fullName").value("Maria Nowak"))
+                .andExpect(jsonPath("$.product.productCode").exists())
+                // The exchange log's fields must not leak into the contract shape.
+                .andExpect(jsonPath("$.ackHttpStatus").doesNotExist());
+    }
+
+    @Test
+    void nameSearchFindsItCaseInsensitivelyOnPartOfTheName() throws Exception {
+        mvc.perform(post("/api/v1/dispatch")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"scenarioId\":\"SIM-01\"}"))
+                .andExpect(status().isOk());
+
+        mvc.perform(get("/api/v1/applications").param("name", "NOWA"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[?(@.applicationId == 'SIM-01')].applicant.fullName")
+                        .value(org.hamcrest.Matchers.hasItem("Maria Nowak")));
+
+        // A blank query matches nothing rather than returning the whole corpus.
+        mvc.perform(get("/api/v1/applications").param("name", "  "))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isEmpty());
+    }
+
+    /** An unsolicited callback carries an id and nothing behind it — that is a 404, not an empty object. */
+    @Test
+    void anIdWithNoApplicationBehindItIs404() throws Exception {
+        mvc.perform(put("/api/v1/applications/{id}", "IT-NOTHING")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"serviceId\":\"attempt01\",\"status\":\"ACCEPTED\"}"))
+                .andExpect(status().isOk());
+
+        mvc.perform(get("/api/v1/applications/{id}", "IT-NOTHING"))
+                .andExpect(status().isNotFound());
+    }
+
     @Test
     void aCallbackForSomethingNeverSentIsKeptAndFlagged() throws Exception {
         mvc.perform(put("/api/v1/applications/{id}", "IT-GHOST")

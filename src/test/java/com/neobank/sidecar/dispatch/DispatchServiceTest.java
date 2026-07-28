@@ -7,6 +7,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.neobank.sidecar.SidecarDtos.ApplicationStatusUpdate;
 import com.neobank.sidecar.SidecarDtos.DispatchRequest;
 import com.neobank.sidecar.SidecarDtos.ExchangeView;
@@ -32,7 +33,7 @@ class DispatchServiceTest {
         library = mock(ScenarioLibrary.class);
         // A real client aimed at a dead port: the dispatch path is exercised for real and lands
         // in the "unreachable" branch, which is the branch a student meets most often.
-        service = new DispatchService(exchanges, library, RestClient.create(),
+        service = new DispatchService(exchanges, library, RestClient.create(), new ObjectMapper(),
                 "http://localhost:9", "/api/v1/applications");
         when(exchanges.save(any(Exchange.class))).thenAnswer(call -> call.getArgument(0));
     }
@@ -86,7 +87,7 @@ class DispatchServiceTest {
 
     @Test
     void aCallbackCompletesTheDispatchThatProvokedIt() {
-        Exchange open = Exchange.dispatched("SIM-01", "corr-1", "SIM-01", "http://module");
+        Exchange open = Exchange.dispatched("SIM-01", "corr-1", "SIM-01", "http://module", null);
         when(exchanges.findFirstByApplicationIdAndCallbackAtIsNullOrderByIdAsc("SIM-01"))
                 .thenReturn(Optional.of(open));
 

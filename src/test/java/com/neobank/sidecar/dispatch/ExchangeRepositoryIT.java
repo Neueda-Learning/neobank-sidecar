@@ -51,7 +51,7 @@ class ExchangeRepositoryIT {
     @Test
     void bothHalvesOfAnExchangeRoundTripThroughRealMysql() {
         Exchange sent = exchanges.saveAndFlush(
-                Exchange.dispatched("APP-1", "COR-1", "SIM-01", "http://module:8080"));
+                Exchange.dispatched("APP-1", "COR-1", "SIM-01", "http://module:8080", null));
 
         assertThat(sent.getId()).isNotNull();
         assertThat(sent.getSentAt()).isNotNull();
@@ -75,9 +75,9 @@ class ExchangeRepositoryIT {
         // Two dispatches of the SAME application id — the SIM-25 case. Oldest-first is what makes
         // two arriving callbacks pair with the right rows instead of being shuffled.
         Exchange first = exchanges.saveAndFlush(
-                Exchange.dispatched("APP-DUP", "COR-1", "SIM-01", "http://module:8080"));
+                Exchange.dispatched("APP-DUP", "COR-1", "SIM-01", "http://module:8080", null));
         Exchange second = exchanges.saveAndFlush(
-                Exchange.dispatched("APP-DUP", "COR-2", "SIM-25", "http://module:8080"));
+                Exchange.dispatched("APP-DUP", "COR-2", "SIM-25", "http://module:8080", null));
 
         Exchange match = exchanges
                 .findFirstByApplicationIdAndCallbackAtIsNullOrderByIdAsc("APP-DUP").orElseThrow();

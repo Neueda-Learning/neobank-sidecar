@@ -84,19 +84,49 @@ Safe — the volume holds nothing but a development log.
 
 Your module calls exactly one of these. The rest are for you and the UI.
 
+Your module calls the three **contract** rows. The rest are for you and the UI.
+
 | | Endpoint | What it is |
 |---|---|---|
-| **contract** | `PUT /api/v1/applications/{applicationId}` | **What your module calls.** Three fields — `serviceId`, `status`, `comment` — with the id in the URL. Answers `200 {"received":true,…}`. |
+| **contract** | `PUT /api/v1/applications/{applicationId}` | **Where your module reports its decision.** Three fields — `serviceId`, `status`, `comment` — with the id in the URL. Answers `200 {"received":true,…}`. |
+| **contract** | `GET /api/v1/applications/{applicationId}` | **Read the application back.** Answers the api-contract §4 application object — the same one that was POSTed to you. `404` if it was never sent here. |
+| **contract** | `GET /api/v1/applications?name=` | Applications whose `applicant.fullName` contains `name` (case-insensitive substring). A list of the same §4 objects. |
 | tool | `GET /api/v1/scenarios` | The library, with every envelope attached. |
 | tool | `POST /api/v1/dispatch` | Send one: `{scenarioId}` or `{envelope}`, plus optional `moduleUrl` and `freshId`. |
 | tool | `GET /api/v1/dispatches` | The exchange log, newest first. |
 | tool | `DELETE /api/v1/dispatches` | Clear the log. |
 | ops | `GET /health` · `GET /info` | Up, and where it is pointing. |
 
-That `PUT` is a **copy of the real orchestrator's endpoint** and has to stay exact — the path, the
-three fields, and the always-`200`. If it were more forgiving than the orchestrator, a
-broken module could look finished here and fail in the system stack. So: a late, duplicate or
-misdirected callback is accepted and recorded as an `unsolicited` row rather than refused.
+All three contract rows are **copies of the real orchestrator's endpoints** and have to stay exact.
+If any were more forgiving than the orchestrator, a broken module could look finished here and fail
+in the system stack. So: a late, duplicate or misdirected callback is accepted and recorded as an
+`unsolicited` row rather than refused.
+
+### Reading the application back
+
+Your module is handed the whole application in its envelope, and it should not store the parts it
+does not own. When an operator screen needs the applicant's name later, you fetch it — live, from
+the orchestrator — and here that is the sidecar:
+
+```bash
+curl -s localhost:9000/api/v1/applications/SIM-01 | jq .applicant.fullName
+curl -s 'localhost:9000/api/v1/applications?name=nowak' | jq '.[].applicationId'
+```
+
+The object you get is **identical** to the `application` field of the envelope you were sent. One
+object, two ways to get it — pushed to you, or pulled by you. That is the point: if the pulled copy
+had a different shape it would be a second contract to keep in step, and pulling it would be
+worthless.
+
+You only get back what this box has actually sent. An id it never dispatched is a `404`, including
+one that only ever appeared on an unsolicited callback — `200` with an empty body would let your
+module treat "nothing here" as "an applicant with no name".
+
+> **There is no bare `GET /api/v1/applications`.** On the real orchestrator that returns its
+> *board* — every application with its ten step statuses — and this box has no journey, no steps and
+> no board to build one from. Serving a hollow imitation is exactly how a module comes to depend on
+> something that will not be there, so asking for it here gets you a `4xx` rather than something
+> misleading. Read `{id}` and `?name=`; those are real.
 
 ### Where your module is
 
